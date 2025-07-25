@@ -1,0 +1,17 @@
+Compact Unique Sensor Log Storage Notes
+======================================
+
+This approach uses a single 64-bit variable as a bitmap. Each bit
+position corresponds to a reading in the range 0–63.
+
+- **store_sensor_readings** iterates through the provided array and sets
+the bit for each reading. Because each bit can only be 0 or 1, this
+automatically removes duplicates and keeps the values logically sorted
+by index.
+- **print_logged_readings** scans from bit 0 to bit 63, printing any index
+with its bit set. This order guarantees ascending output without needing
+additional data structures.
+
+This implementation avoids dynamic memory entirely and uses only a
+single 64-bit variable for storage, making it suitable for memory-
+constrained embedded systems.
