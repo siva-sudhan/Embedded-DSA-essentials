@@ -1,0 +1,19 @@
+Memory-Efficient Frequency Tracker Notes
+=======================================
+
+The frequency table stores two 4-bit counters per byte to track the
+occurrence count of all 256 possible sensor values.
+
+- **Byte layout**: index `i` corresponds to byte `i/2`.
+  - If `i` is even, its count occupies the lower 4 bits.
+  - If `i` is odd, the count is in the upper 4 bits.
+
+- **Incrementing**: read the existing 4-bit value, clamp it to a maximum
+  of 15, then store it back by masking and shifting. This avoids
+  exceeding the 4-bit limit.
+
+- **Helper** `get_frequency` simply extracts the proper nibble and
+  returns it, aiding code readability.
+
+This compact representation requires only 128 bytes, well under the
+512-byte limit, while still supporting up to 15 occurrences per value.
