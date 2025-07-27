@@ -1,0 +1,14 @@
+Circular Buffer with Windowed Max Notes
+======================================
+
+This implementation maintains a ring buffer of fixed size. Each slot is
+initialized to `INT_MIN` so that unused entries do not affect the
+computed maximum. The index `head` always points to the next location to
+write. After inserting a reading, `head` advances with wraparound using
+`(head + 1) % size`.
+
+`get_max_last_k` walks backwards from the most recent element and scans
+at most `window` positions to compute the maximum. Because unused
+positions contain `INT_MIN`, they are ignored naturally when the buffer
+is not yet full. This approach avoids dynamic memory entirely and
+operates in O(K) time.
