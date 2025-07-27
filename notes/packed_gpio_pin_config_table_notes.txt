@@ -1,0 +1,16 @@
+Packed GPIO Pin Configuration Table Notes
+=========================================
+
+Each pin's mode is stored in two bits of a 64-bit register. To modify
+one pin:
+
+1. Create a mask `0x3ULL << (2 * pin)` covering its two bits.
+2. Clear those bits in the register using `&= ~mask`.
+3. OR the desired configuration (masked to 0x3) shifted into place.
+
+Reading a pin simply involves shifting right by `2 * pin` and masking
+with `0x3`.
+
+This design avoids additional memory and mirrors how microcontrollers
+pack configuration bits for GPIO pins.
+
