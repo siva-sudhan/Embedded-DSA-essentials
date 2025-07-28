@@ -1,0 +1,15 @@
+Bitfield-Based Resource Allocator Notes
+======================================
+
+This pattern uses a 32-bit integer as a bitmap to track the allocation of
+hardware timers. Bit position `i` corresponds to timer `i`.
+
+- **allocate_timer** scans the bitmap from least significant bit to most
+  significant. The first zero bit indicates a free timer and is set to
+  one. The function returns that index or `-1` if no bits are clear.
+- **free_timer** simply clears the bit at the given index.
+- **is_timer_allocated** checks whether a particular bit is set.
+
+Using bitwise operations keeps the implementation fast and avoids any
+loops over data structures larger than a single register, which is ideal
+for embedded systems with strict resource constraints.
