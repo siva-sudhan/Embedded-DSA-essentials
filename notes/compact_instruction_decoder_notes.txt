@@ -1,0 +1,13 @@
+Compact Instruction Decoder Notes
+================================
+
+The decoder uses a fixed-size `uint16_t opcode_freq[256]` array to count
+how often each opcode appears. For each 16-bit instruction we shift right
+by eight bits to isolate the opcode and increment its counter. Because at
+most 1000 instructions are processed, 16-bit counters are sufficient and
+no dynamic memory is required.
+
+After counting, we scan the array to find the opcode with the highest
+frequency. The function returns both the opcode and its count in an
+`OpcodeStat` structure. This approach keeps memory usage predictable and
+works well on microcontrollers without malloc.
