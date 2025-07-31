@@ -1,0 +1,12 @@
+Memory-Constrained Logger System Notes
+=====================================
+
+The logger uses a static 1 KB memory pool to hold both log strings and
+metadata. Each log entry is stored exactly once in the pool and indexed
+by a 16-bit offset. Duplicates are detected through a linear search of
+previous entries.
+
+Retrieving logs in alphabetical order involves copying existing strings
+into a new array, sorting them with `qsort`, and returning the array to
+the caller. This keeps the persistent memory footprint below the 1 KB
+limit while allowing sorted retrieval on demand.
