@@ -1,0 +1,11 @@
+Packed Peripheral Config Table Notes
+===================================
+
+The configuration table packs 16 peripherals using three bits each for a
+total of 48 bits. Because the array spans only six bytes, updating a
+single peripheral may require modifying bits across two adjacent bytes.
+
+The solution builds a 64-bit temporary variable from the array, updates
+the relevant 3-bit field, then writes the bytes back. This approach keeps
+the bit manipulations simple and avoids undefined behavior from shifting
+more than the width of a byte.
