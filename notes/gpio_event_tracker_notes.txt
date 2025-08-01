@@ -1,0 +1,19 @@
+GPIO Event Tracker Notes
+=======================
+
+- A static array `uint32_t pins[8]` stores the state of 256 GPIO pins.
+  Each element represents 32 pins, giving a total of 32 bytes of storage.
+- Bit indexing:
+  - `pins[pin_id / 32]` selects the 32-bit word for a pin.
+  - `(pin_id % 32)` selects the bit within that word.
+
+Functions
+---------
+- `set_pin_active` and `set_pin_inactive` toggle the appropriate bit.
+- `is_pin_active` tests the bit and returns a boolean.
+- `count_active_pins` sums `__builtin_popcount` of each word.
+- `get_first_active_pin` (optional) finds the first non-zero word and uses
+  `__builtin_ctz` to locate the lowest set bit, avoiding a full 256-bit scan.
+
+This implementation meets the 32‑byte memory limit and requires no dynamic
+allocation.
