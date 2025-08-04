@@ -1,0 +1,11 @@
+Compact Sensor Event Tracker Notes
+=================================
+
+- Events are stored using two bits, allowing four logical values (0–3).
+- `insert_event` and `get_event` compute the target byte using `index >> 2`
+  and place the event at `(3 - (index & 3)) * 2` bits within that byte.
+- The 16-event extension uses four bits per event, storing two events per
+  byte with a similar shift calculation based on `index >> 1`.
+- Wear-leveling is simulated with per-byte modification counters. When a
+  counter exceeds `MAX_MODIFICATIONS` (10), a callback is invoked and the
+  counter resets, allowing the caller to relocate data and reduce flash wear.
