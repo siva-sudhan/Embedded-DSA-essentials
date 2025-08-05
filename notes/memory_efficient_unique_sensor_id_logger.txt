@@ -1,0 +1,35 @@
+Memory-Efficient Unique Sensor ID Logger
+=======================================
+
+Overview
+--------
+The logger keeps track of up to 512 distinct 32‑bit sensor IDs without any
+dynamic memory allocation.  IDs are stored directly in a fixed-size hash
+table that uses linear probing for collision resolution.  A companion array
+preserves the order in which unique IDs were first observed.
+
+Key Points
+----------
+* **Memory layout**
+  - `id_table[512]`: 32‑bit open-addressing hash table (2 KB).
+  - `order_index[512]`: indices into `id_table` recording insertion order
+    (~1 KB).
+* **Operations**
+  - `insert_sensor(id)`: O(1) expected time using multiplicative hash and
+    linear probing.  Duplicates simply return `false`.
+  - `reset_log()`: reinitializes the table and order count.
+  - `get_logged_ids(buf)`: copies unique IDs to `buf` preserving first-seen
+    order.
+* **Limitations & Assumptions**
+  - The sentinel value `0xFFFFFFFF` denotes an empty slot; this ID cannot be
+    logged.
+  - Table capacity is fixed; once 512 unique IDs are inserted, further
+    insertions fail.
+  - Maintaining insertion order requires additional RAM beyond the 2 KB
+    table.
+
+Potential Improvements
+----------------------
+* Compress the order-tracking structure using bit-packing to reduce RAM.
+* Use a different sentinel scheme if all 32‑bit values must be supported.
+* Extend the design with wear-leveling for persistent flash storage.
